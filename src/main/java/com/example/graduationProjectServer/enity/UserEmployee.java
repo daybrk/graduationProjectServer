@@ -9,6 +9,7 @@ public class UserEmployee {
 
     @Id
     private String email;
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
     private String name;
     private String secondName;
@@ -62,5 +63,13 @@ public class UserEmployee {
 
     public void setAccessRights(int accessRights) {
         this.accessRights = accessRights;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
