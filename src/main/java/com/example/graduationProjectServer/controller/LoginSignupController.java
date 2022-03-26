@@ -5,6 +5,7 @@ import com.example.graduationProjectServer.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +22,10 @@ public class LoginSignupController {
             UserStructure userFromDb = userRepo.findByEmail(user.getEmail());
             if (userFromDb != null) {
                 return ResponseEntity.badRequest().body("Пользователь с такими email уже сущетсвует");
+            } else {
+                userRepo.save(user);
+                return ResponseEntity.ok("Регистрация прошла успешно");
             }
-            return ResponseEntity.ok("Регистрация прошла успешно");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }

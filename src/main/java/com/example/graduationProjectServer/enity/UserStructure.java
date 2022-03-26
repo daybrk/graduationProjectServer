@@ -9,7 +9,6 @@ public class UserStructure {
 
     @Id
     private String email;
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
     private String name;
     private String secondName;
