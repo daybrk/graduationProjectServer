@@ -1,11 +1,10 @@
 package com.example.graduationProjectServer.controller;
 
-import com.example.graduationProjectServer.enity.UserEmployee;
+import com.example.graduationProjectServer.enity.UserStructure;
 import com.example.graduationProjectServer.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +16,9 @@ public class LoginSignupController {
     private UserRepo userRepo;
 
     @PostMapping("/registration")
-    public ResponseEntity createNewUser(@RequestBody UserEmployee user) {
+    public ResponseEntity createNewUser(@RequestBody UserStructure user) {
         try {
-            UserEmployee userFromDb = userRepo.findByEmail(user.getEmail());
+            UserStructure userFromDb = userRepo.findByEmail(user.getEmail());
             if (userFromDb != null) {
                 return ResponseEntity.badRequest().body("Пользователь с такими email уже сущетсвует");
             }
@@ -38,7 +37,7 @@ public class LoginSignupController {
             } else if (password.equals("")) {
                 return new ResponseEntity<>("Введите пароль", HttpStatus.NO_CONTENT);
             } else {
-                UserEmployee gettingUser = userRepo.findByEmail(email);
+                UserStructure gettingUser = userRepo.findByEmail(email);
                 System.out.println(email + " " + password + " " + gettingUser);
                 if (gettingUser != null) {
                     if (password.equals(gettingUser.getPassword())) {
@@ -57,7 +56,7 @@ public class LoginSignupController {
     }
 
     @GetMapping("/user")
-    public List<UserEmployee> authorizationUser() {
+    public List<UserStructure> authorizationUser() {
         try {
             return userRepo.findAll();
         } catch (Exception e) {

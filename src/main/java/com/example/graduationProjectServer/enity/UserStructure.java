@@ -5,7 +5,7 @@ import com.sun.istack.NotNull;
 import javax.persistence.*;
 
 @Entity
-public class UserEmployee {
+public class UserStructure {
 
     @Id
     private String email;
