@@ -1,20 +1,19 @@
 package com.example.graduationProjectServer.enity;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class UserStructure {
 
     @Id
+    @Column(name = "user_email")
     private String email;
-    private Long userId;
-    private String name;
-    private String secondName;
-    private String lastName;
     private String password;
-    private int accessRights;
+    private String secondName;
+    private String name;
+    private String lastName;
 
     public String getName() {
         return name;
@@ -56,19 +55,17 @@ public class UserStructure {
         this.email = email;
     }
 
-    public int getAccessRights() {
-        return accessRights;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserStructure that = (UserStructure) o;
+        return email.equals(that.email) && name.equals(that.name) && secondName.equals(that.secondName)
+                && lastName.equals(that.lastName) && password.equals(that.password);
     }
 
-    public void setAccessRights(int accessRights) {
-        this.accessRights = accessRights;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, name, secondName, lastName, password);
     }
 }

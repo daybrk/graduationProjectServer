@@ -1,11 +1,14 @@
 package com.example.graduationProjectServer.controller;
 
+import com.example.graduationProjectServer.enity.Roles;
+import com.example.graduationProjectServer.enity.UserAndRole;
+import com.example.graduationProjectServer.enity.UserAndRoleId;
 import com.example.graduationProjectServer.enity.UserStructure;
+import com.example.graduationProjectServer.repository.UserAndRoleRepo;
 import com.example.graduationProjectServer.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +18,8 @@ public class LoginSignupController {
 
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private UserAndRoleRepo userAndRoleRepo;
 
     @PostMapping("/registration")
     public ResponseEntity createNewUser(@RequestBody UserStructure user) {
@@ -24,9 +29,11 @@ public class LoginSignupController {
                 return ResponseEntity.badRequest().body("Пользователь с такими email уже сущетсвует");
             } else {
                 userRepo.save(user);
+                userAndRoleRepo.save(new UserAndRole(new UserAndRoleId(user, Roles.USER)));
                 return ResponseEntity.ok("Регистрация прошла успешно");
             }
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.badRequest().body(e);
         }
     }
@@ -62,10 +69,10 @@ public class LoginSignupController {
         }
     }
 
-    @GetMapping("/user")
-    public List<UserStructure> authorizationUser() {
+    @GetMapping("/user/{email}")
+    public UserStructure authorizationUser(@PathVariable String email) {
         try {
-            return userRepo.findAll();
+            return userRepo.findByEmail(email);
         } catch (Exception e) {
             return null;
         }

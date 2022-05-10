@@ -1,9 +1,7 @@
 package com.example.graduationProjectServer.enity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class SuggestionStructure {
@@ -12,11 +10,24 @@ public class SuggestionStructure {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long suggestionId;
     private String suggestion;
-    private String suggestionDate;
-    private String suggestionStatus;
     private String suggestionTheme;
-    private String suggestionAuthor;
+    private String suggestionDate;
+    private Status suggestionStatus;
+    @OneToOne
+    private UserStructure suggestionAuthor;
 
+    public SuggestionStructure(String suggestionTheme, String suggestion, String suggestionDate,
+                               Status suggestionStatus, UserStructure suggestionAuthor) {
+        this.suggestion = suggestion;
+        this.suggestionDate = suggestionDate;
+        this.suggestionStatus = suggestionStatus;
+        this.suggestionTheme = suggestionTheme;
+        this.suggestionAuthor = suggestionAuthor;
+    }
+
+    public SuggestionStructure() {
+
+    }
 
     public Long getSuggestionId() {
         return suggestionId;
@@ -42,14 +53,6 @@ public class SuggestionStructure {
         this.suggestionDate = suggestionDate;
     }
 
-    public String getSuggestionStatus() {
-        return suggestionStatus;
-    }
-
-    public void setSuggestionStatus(String suggestionStatus) {
-        this.suggestionStatus = suggestionStatus;
-    }
-
     public String getSuggestionTheme() {
         return suggestionTheme;
     }
@@ -58,13 +61,34 @@ public class SuggestionStructure {
         this.suggestionTheme = suggestionTheme;
     }
 
-    public String getSuggestionAuthor() {
+    public Status getSuggestionStatus() {
+        return suggestionStatus;
+    }
+
+    public void setSuggestionStatus(Status suggestionStatus) {
+        this.suggestionStatus = suggestionStatus;
+    }
+
+    public UserStructure getSuggestionAuthor() {
         return suggestionAuthor;
     }
 
-    public void setSuggestionAuthor(String suggestionAuthor) {
+    public void setSuggestionAuthor(UserStructure suggestionAuthor) {
         this.suggestionAuthor = suggestionAuthor;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SuggestionStructure that = (SuggestionStructure) o;
+        return suggestionId.equals(that.suggestionId) && suggestion.equals(that.suggestion) &&
+                suggestionDate.equals(that.suggestionDate) && suggestionStatus == that.suggestionStatus &&
+                suggestionTheme.equals(that.suggestionTheme) && suggestionAuthor.equals(that.suggestionAuthor);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(suggestionId, suggestion, suggestionDate, suggestionStatus, suggestionTheme, suggestionAuthor);
+    }
 }
