@@ -1,6 +1,5 @@
 package com.example.graduationProjectServer.controller;
 
-import com.example.graduationProjectServer.enity.SuggestionFromClient;
 import com.example.graduationProjectServer.enity.SuggestionStructure;
 import com.example.graduationProjectServer.enity.UserStructure;
 import com.example.graduationProjectServer.repository.SuggestionRepo;
@@ -21,35 +20,23 @@ public class SuggestionController {
     private UserRepo userRepo;
 
     @PostMapping("/suggestion/create")
-    public ResponseEntity createSuggestion(@RequestBody SuggestionFromClient suggestion) {
+    public ResponseEntity createSuggestion(@RequestBody SuggestionStructure suggestion) {
 
-        UserStructure user = userRepo.findByEmail(suggestion.getSuggestionAuthor());
-
-        SuggestionStructure suggestionStructure =
-                new SuggestionStructure(
-                        suggestion.getSuggestion(), suggestion.getSuggestionTheme(), suggestion.getSuggestionDate(),
-                        suggestion.getSuggestionStatus(), user);
-
-        suggestionRepo.save(suggestionStructure);
+        suggestionRepo.save(suggestion);
         return ResponseEntity.ok("Предложение создано");
     }
 
     @GetMapping("/suggestion/{emailAuthor}")
     public List<SuggestionStructure> getSuggestionsByEmail(@PathVariable ("emailAuthor") String email) {
-        List<SuggestionStructure> suggestionList = new ArrayList<>();
         UserStructure user = userRepo.findByEmail(email);
-        suggestionList = suggestionRepo.findAllBySuggestionAuthor(user);
 
-        return suggestionList;
+        return suggestionRepo.findAllBySuggestionAuthor(user);
     }
 
     @GetMapping("/suggestion")
     public List<SuggestionStructure> getAllSuggestions() {
-        List<SuggestionStructure> suggestionList = new ArrayList<>();
 
-        suggestionList = suggestionRepo.findAll();
-
-        return suggestionList;
+        return suggestionRepo.findAll();
     }
 }
 

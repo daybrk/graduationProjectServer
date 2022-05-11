@@ -9,6 +9,7 @@ public class SuggestionStructure {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long suggestionId;
+    @Column(length = 2048)
     private String suggestion;
     private String suggestionTheme;
     private String suggestionDate;
