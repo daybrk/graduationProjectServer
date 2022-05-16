@@ -17,17 +17,7 @@ public class SuggestionStructure {
     @OneToOne
     private UserStructure suggestionAuthor;
 
-    public SuggestionStructure(String suggestionTheme, String suggestion, String suggestionDate,
-                               Status suggestionStatus, UserStructure suggestionAuthor) {
-        this.suggestion = suggestion;
-        this.suggestionDate = suggestionDate;
-        this.suggestionStatus = suggestionStatus;
-        this.suggestionTheme = suggestionTheme;
-        this.suggestionAuthor = suggestionAuthor;
-    }
-
     public SuggestionStructure() {
-
     }
 
     public Long getSuggestionId() {

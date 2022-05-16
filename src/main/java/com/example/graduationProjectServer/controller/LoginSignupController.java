@@ -1,17 +1,14 @@
 package com.example.graduationProjectServer.controller;
 
 import com.example.graduationProjectServer.enity.Roles;
-import com.example.graduationProjectServer.enity.UserAndRole;
-import com.example.graduationProjectServer.enity.UserAndRoleId;
+import com.example.graduationProjectServer.enity.UserRole;
 import com.example.graduationProjectServer.enity.UserStructure;
-import com.example.graduationProjectServer.repository.UserAndRoleRepo;
+import com.example.graduationProjectServer.repository.UserRoleRepo;
 import com.example.graduationProjectServer.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class LoginSignupController {
@@ -19,7 +16,7 @@ public class LoginSignupController {
     @Autowired
     private UserRepo userRepo;
     @Autowired
-    private UserAndRoleRepo userAndRoleRepo;
+    private UserRoleRepo userRoleRepo;
 
     @PostMapping("/registration")
     public ResponseEntity createNewUser(@RequestBody UserStructure user) {
@@ -29,7 +26,7 @@ public class LoginSignupController {
                 return ResponseEntity.badRequest().body("Пользователь с такими email уже сущетсвует");
             } else {
                 userRepo.save(user);
-                userAndRoleRepo.save(new UserAndRole(new UserAndRoleId(user, Roles.USER)));
+                userRoleRepo.save(new UserRole(user, Roles.USER));
                 return ResponseEntity.ok("Регистрация прошла успешно");
             }
         } catch (Exception e) {
@@ -54,8 +51,8 @@ public class LoginSignupController {
                 if (gettingUser != null) {
                     // проверка на правильность введенного пароля
                     if (password.equals(gettingUser.getPassword())) {
-                        System.out.println("Авторизация что-то");
-                        return ResponseEntity.ok("Авторизация прошла успешно");
+                        System.out.println(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRole());
+                        return ResponseEntity.ok(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRole().toString());
                     } else {
                         return ResponseEntity.badRequest().body("Введённый пароль неверный");
                     }
