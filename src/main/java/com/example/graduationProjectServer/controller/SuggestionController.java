@@ -1,5 +1,6 @@
 package com.example.graduationProjectServer.controller;
 
+import com.example.graduationProjectServer.enity.Status;
 import com.example.graduationProjectServer.enity.SuggestionStructure;
 import com.example.graduationProjectServer.enity.UserStructure;
 import com.example.graduationProjectServer.repository.SuggestionRepo;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 public class SuggestionController {
@@ -24,6 +26,33 @@ public class SuggestionController {
 
         suggestionRepo.save(suggestion);
         return ResponseEntity.ok("Предложение создано");
+    }
+
+    @DeleteMapping("/suggestion/delete/{suggestionId}")
+    public ResponseEntity deleteSuggestion(@PathVariable ("suggestionId") Long suggestionId) {
+
+        SuggestionStructure suggestion = suggestionRepo.findById(suggestionId)
+                .orElseThrow(() -> new NoSuchElementException("Предложение не найдено"));
+        if (suggestion != null) {
+            suggestionRepo.delete(suggestion);
+            return ResponseEntity.ok("Предложение удалено");
+        } else {
+            return ResponseEntity.badRequest().body("Предложение не найдено");
+        }
+    }
+
+    @PutMapping("/suggestion/confirm/{suggestionId}")
+    public ResponseEntity confirmSuggestion(@PathVariable ("suggestionId") Long suggestionId) {
+
+        SuggestionStructure suggestion = suggestionRepo.findById(suggestionId)
+                .orElseThrow(() -> new NoSuchElementException("Предложение не найдено"));
+        if (suggestion != null) {
+            suggestion.setSuggestionStatus(Status.Approved);
+            suggestionRepo.save(suggestion);
+            return ResponseEntity.ok("Предложение удалено");
+        } else {
+            return ResponseEntity.badRequest().body("Предложение не найдено");
+        }
     }
 
     @GetMapping("/suggestion/{emailAuthor}")

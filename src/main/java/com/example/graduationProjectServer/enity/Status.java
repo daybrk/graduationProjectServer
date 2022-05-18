@@ -1,7 +1,7 @@
 package com.example.graduationProjectServer.enity;
 
 public enum Status {
-    OnСonsideration,
+    ForСonsideration,
     Approved,
     InExecution,
     Completed,
