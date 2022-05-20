@@ -1,14 +1,14 @@
 package com.example.graduationProjectServer.controller;
 
-import com.example.graduationProjectServer.enity.Roles;
-import com.example.graduationProjectServer.enity.UserRole;
-import com.example.graduationProjectServer.enity.UserStructure;
+import com.example.graduationProjectServer.enity.*;
 import com.example.graduationProjectServer.repository.UserRoleRepo;
 import com.example.graduationProjectServer.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 @RestController
 public class LoginSignupController {
@@ -37,41 +37,33 @@ public class LoginSignupController {
 // endpoint login передаем емаил пароль
     @GetMapping("/login/{email}/{password}")
     // pathvariable позволяет передать значения из урл выше 
-    public ResponseEntity<String> authorizationUser(@PathVariable(value = "email") String email,
-                                                    @PathVariable(value = "password") String password) {
+    public AuthResponse authorizationUser(@PathVariable(value = "email") String email,
+                                          @PathVariable(value = "password") String password) {
         try {
             if (email.equals("")) {
-                return ResponseEntity.badRequest().body("Введите email");
+                return new AuthResponse(null, "Пустое поле с email");
             } else if (password.equals("")) {
-                return new ResponseEntity<>("Введите пароль", HttpStatus.NO_CONTENT);
+                return new AuthResponse(null, "Пустое поле с паролем");
             } else {
                 // gettinguser изначально пустой, потом мы кладем внего все данные пользователя
                 UserStructure gettingUser = userRepo.findByEmail(email);
-                System.out.println(email + " " + password + " " + gettingUser);
                 if (gettingUser != null) {
                     // проверка на правильность введенного пароля
                     if (password.equals(gettingUser.getPassword())) {
-                        System.out.println(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRole());
-                        return ResponseEntity.ok(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRole().toString());
+
+                        return new AuthResponse(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRole().toString(), "");
                     } else {
-                        return ResponseEntity.badRequest().body("Введённый пароль неверный");
+                        return new AuthResponse(null, "Введён неверный пароль");
                     }
                     // если gettinguser = null то выводит это
                 } else {
-                    return ResponseEntity.badRequest().body("Пользователя с таким email не существует");
+                    return new AuthResponse(null, "Пользователя с таким email не существует");
                 }
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new AuthResponse(null, e.getMessage());
         }
     }
 
-    @GetMapping("/user/{email}")
-    public UserStructure authorizationUser(@PathVariable String email) {
-        try {
-            return userRepo.findByEmail(email);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+
 }
