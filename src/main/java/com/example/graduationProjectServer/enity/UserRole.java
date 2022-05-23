@@ -9,13 +9,15 @@ public class UserRole {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne
+    @JoinColumn(name = "user_email")
     private UserStructure userEmail;
-    @Column(name = "role")
-    private Roles role;
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    private Roles roleId;
 
     public UserRole(UserStructure userEmail, Roles role) {
         this.userEmail = userEmail;
-        this.role = role;
+        this.roleId = role;
     }
     public UserRole() {
     }
@@ -28,12 +30,12 @@ public class UserRole {
         this.userEmail = userEmail;
     }
 
-    public Roles getRole() {
-        return role;
+    public Roles getRoleId() {
+        return roleId;
     }
 
-    public void setRole(Roles role) {
-        this.role = role;
+    public void setRoleId(Roles role) {
+        this.roleId = role;
     }
 
     public Long getId() {

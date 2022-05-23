@@ -1,14 +1,14 @@
 package com.example.graduationProjectServer.controller;
 
 import com.example.graduationProjectServer.enity.*;
+import com.example.graduationProjectServer.repository.RolesRepo;
 import com.example.graduationProjectServer.repository.UserRoleRepo;
 import com.example.graduationProjectServer.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+import java.util.NoSuchElementException;
 
 @RestController
 public class LoginSignupController {
@@ -17,6 +17,8 @@ public class LoginSignupController {
     private UserRepo userRepo;
     @Autowired
     private UserRoleRepo userRoleRepo;
+    @Autowired
+    private RolesRepo rolesRepo;
 
     @PostMapping("/registration")
     public ResponseEntity createNewUser(@RequestBody UserStructure user) {
@@ -26,11 +28,10 @@ public class LoginSignupController {
                 return ResponseEntity.badRequest().body("Пользователь с такими email уже сущетсвует");
             } else {
                 userRepo.save(user);
-                userRoleRepo.save(new UserRole(user, Roles.USER));
+                userRoleRepo.save(new UserRole(user, rolesRepo.getById(0L)));
                 return ResponseEntity.ok("Регистрация прошла успешно");
             }
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.badRequest().body(e);
         }
     }
@@ -50,8 +51,9 @@ public class LoginSignupController {
                 if (gettingUser != null) {
                     // проверка на правильность введенного пароля
                     if (password.equals(gettingUser.getPassword())) {
-
-                        return new AuthResponse(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRole().toString(), "");
+                        Roles role = rolesRepo.findById(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRoleId().getId())
+                                .orElseThrow(() -> new NoSuchElementException("Предложение не найдено"));
+                        return new AuthResponse(role.getRole(), "");
                     } else {
                         return new AuthResponse(null, "Введён неверный пароль");
                     }

@@ -13,9 +13,12 @@ public class SuggestionStructure {
     private String suggestion;
     private String suggestionTheme;
     private String suggestionDate;
+    @OneToOne
     private Status suggestionStatus;
     @OneToOne
     private UserStructure suggestionAuthor;
+    @OneToOne
+    private UserStructure suggestionInspector;
 
     public SuggestionStructure() {
     }
@@ -68,18 +71,24 @@ public class SuggestionStructure {
         this.suggestionAuthor = suggestionAuthor;
     }
 
+    public UserStructure getSuggestionInspector() {
+        return suggestionInspector;
+    }
+
+    public void setSuggestionInspector(UserStructure suggestionInspector) {
+        this.suggestionInspector = suggestionInspector;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SuggestionStructure that = (SuggestionStructure) o;
-        return suggestionId.equals(that.suggestionId) && suggestion.equals(that.suggestion) &&
-                suggestionDate.equals(that.suggestionDate) && suggestionStatus == that.suggestionStatus &&
-                suggestionTheme.equals(that.suggestionTheme) && suggestionAuthor.equals(that.suggestionAuthor);
+        return suggestionId.equals(that.suggestionId) && suggestion.equals(that.suggestion) && suggestionTheme.equals(that.suggestionTheme) && suggestionDate.equals(that.suggestionDate) && suggestionStatus == that.suggestionStatus && suggestionAuthor.equals(that.suggestionAuthor) && suggestionInspector.equals(that.suggestionInspector);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(suggestionId, suggestion, suggestionDate, suggestionStatus, suggestionTheme, suggestionAuthor);
+        return Objects.hash(suggestionId, suggestion, suggestionTheme, suggestionDate, suggestionStatus, suggestionAuthor, suggestionInspector);
     }
 }
