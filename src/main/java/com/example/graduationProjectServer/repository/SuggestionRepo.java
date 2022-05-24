@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface SuggestionRepo  extends JpaRepository<SuggestionStructure, Long> {
     List<SuggestionStructure> findAllBySuggestionAuthor(UserStructure email);
+    List<SuggestionStructure> findAllBySuggestionInspectorIsNull();
 }

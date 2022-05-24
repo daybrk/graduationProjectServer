@@ -24,6 +24,7 @@ public class SuggestionController {
     @Autowired
     private StatusRepo statusRepo;
 
+    private int count;
 
     @PostMapping("/suggestion/create")
     public ResponseEntity createSuggestion(@RequestBody SuggestionStructure suggestion) {
@@ -74,7 +75,7 @@ public class SuggestionController {
     @GetMapping("/suggestion")
     public List<SuggestionStructure> getAllSuggestions() {
 
-        return suggestionRepo.findAll();
+        return suggestionRepo.findAllBySuggestionInspectorIsNull();
     }
 }
 
