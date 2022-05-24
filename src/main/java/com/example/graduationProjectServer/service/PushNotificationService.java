@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class PushNotificationService {
 
-
     private final Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
     private final FCMService fcmService;
 
@@ -24,24 +23,16 @@ public class PushNotificationService {
         this.fcmService = fcmService;
     }
 
-    @Scheduled(initialDelay = 60000, fixedDelay = 60000)
-    public void sendSamplePushNotification() {
+    public void sendSamplePushNotification(PushNotificationRequest request) {
         try {
-            fcmService.sendMessageToToken(getSamplePushNotificationRequest());
+            fcmService.sendMessageToToken(getSamplePushNotificationRequest(request));
         } catch (InterruptedException | ExecutionException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private Map<String, String> getSamplePayloadData() {
-        Map<String, String> pushData = new HashMap<>();
-        pushData.put("messageId", "payloadMessageId");
-        pushData.put("text", ("payloadData") + " " + LocalDateTime.now());
-        return pushData;
-    }
-
-    private PushNotificationRequest getSamplePushNotificationRequest() {
-        return new PushNotificationRequest(("title"), ("message"), ("topic"));
+    private PushNotificationRequest getSamplePushNotificationRequest(PushNotificationRequest request) {
+        return new PushNotificationRequest(request.getTitle(), request.getMessage(), request.getToken());
     }
 
 }

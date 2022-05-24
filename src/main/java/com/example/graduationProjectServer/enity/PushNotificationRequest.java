@@ -4,16 +4,16 @@ public class PushNotificationRequest {
 
     private String title;
     private String message;
-    private String topic;
     private String token;
 
+    private String topic;
     public PushNotificationRequest() {
     }
 
-    public PushNotificationRequest(String title, String messageBody, String topicName) {
+    public PushNotificationRequest(String title, String message, String token) {
         this.title = title;
-        this.message = messageBody;
-        this.topic = topicName;
+        this.message = message;
+        this.token = token;
     }
 
     public String getTitle() {
@@ -32,19 +32,19 @@ public class PushNotificationRequest {
         this.message = message;
     }
 
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
     public String getToken() {
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 }
