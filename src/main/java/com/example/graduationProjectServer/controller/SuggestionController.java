@@ -29,7 +29,6 @@ public class SuggestionController {
     private RolesRepo rolesRepo;
 
     private int count = 0;
-    private PushNotificationService pushNotificationService;
 
     @PostMapping("/suggestion/create")
     public ResponseEntity createSuggestion(@RequestBody SuggestionStructure suggestion) {

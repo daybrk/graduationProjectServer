@@ -36,10 +36,11 @@ public class LoginSignupController {
         }
     }
 // endpoint login передаем емаил пароль
-    @GetMapping("/login/{email}/{password}")
+    @GetMapping("/login/{email}/{password}/{token}")
     // pathvariable позволяет передать значения из урл выше 
     public AuthResponse authorizationUser(@PathVariable(value = "email") String email,
-                                          @PathVariable(value = "password") String password) {
+                                          @PathVariable(value = "password") String password,
+                                          @PathVariable(value = "token") String token) {
         try {
             if (email.equals("")) {
                 return new AuthResponse(null, "Пустое поле с email");
@@ -53,6 +54,8 @@ public class LoginSignupController {
                     if (password.equals(gettingUser.getPassword())) {
                         Roles role = rolesRepo.findById(userRoleRepo.findUserRoleByUserEmail(gettingUser).getRoleId().getId())
                                 .orElseThrow(() -> new NoSuchElementException("Предложение не найдено"));
+                        gettingUser.setToken(token);
+                        userRepo.save(gettingUser);
                         return new AuthResponse(role.getRole(), "");
                     } else {
                         return new AuthResponse(null, "Введён неверный пароль");

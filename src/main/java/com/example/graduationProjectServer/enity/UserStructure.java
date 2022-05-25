@@ -14,6 +14,7 @@ public class UserStructure {
     private String secondName;
     private String name;
     private String lastName;
+    private String token;
 
     public String getName() {
         return name;
@@ -55,17 +56,24 @@ public class UserStructure {
         this.email = email;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserStructure that = (UserStructure) o;
-        return email.equals(that.email) && name.equals(that.name) && secondName.equals(that.secondName)
-                && lastName.equals(that.lastName) && password.equals(that.password);
+        return email.equals(that.email) && password.equals(that.password) && secondName.equals(that.secondName) && name.equals(that.name) && lastName.equals(that.lastName) && token.equals(that.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, name, secondName, lastName, password);
+        return Objects.hash(email, password, secondName, name, lastName, token);
     }
 }

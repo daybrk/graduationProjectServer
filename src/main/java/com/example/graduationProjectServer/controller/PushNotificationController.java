@@ -37,10 +37,10 @@ public class PushNotificationController {
     }
 
     int count = 0;
-    @Scheduled(fixedDelay = 2000)
+    @Scheduled(fixedDelay = 60000)
     public void sendSampleNotification() {
-
-        List<UserRole> usersWithRoles = userRoleRepo.findAllByRoleIdEquals(rolesRepo.getById(0L));
+        // Вылетает ошибка из-за несоответсвия передаваемому id с id в таблице
+        List<UserRole> usersWithRoles = userRoleRepo.findAllByRoleIdEquals(rolesRepo.getById(2L));
         List<UserStructure> moderators = new ArrayList<>();
         for (UserRole sortedSuggestion : usersWithRoles) {
             moderators.add(sortedSuggestion.getUserEmail());
@@ -48,9 +48,9 @@ public class PushNotificationController {
         System.out.println(suggestionRepo.countBySuggestionInspectorAndSuggestionStatusEquals(moderators.get(count), statusRepo.getById(0L)));
         pushNotificationService.sendSamplePushNotification(
                  new PushNotificationRequest(
-                         "У вас скопились непроверенные предложения " + moderators.get(count).getName() + "!-" + moderators.get(count).getEmail(),
+                         "У вас скопились непроверенные предложения " + moderators.get(count).getName() + "!",
                          "Новых предложений: " + suggestionRepo.countBySuggestionInspectorAndSuggestionStatusEquals(moderators.get(count), statusRepo.getById(0L)),
-                         "chJVcRFVSIiSaM0l0Rfxu8:APA91bFjUD4ELPgKMu2SQt9-Rchh0NNFEQDlUWJGwr_OzeoRgIYv6J9aBo7acjHc0q_ijfE3JonKQjJLOb-m3i-JkvQFD8BX98AmoZ9usPGzSoEAd7xLfphTojhL5mS7tpNPsbGu9KoK"));
+                         moderators.get(count).getToken()));
         if (count >= moderators.size() - 1) {
             count = 0;
         } else {
