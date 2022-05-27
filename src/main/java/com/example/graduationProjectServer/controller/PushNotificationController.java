@@ -40,7 +40,7 @@ public class PushNotificationController {
     @Scheduled(fixedDelay = 60000)
     public void sendSampleNotification() {
         // Вылетает ошибка из-за несоответсвия передаваемому id с id в таблице
-        List<UserRole> usersWithRoles = userRoleRepo.findAllByRoleIdEquals(rolesRepo.getById(2L));
+        List<UserRole> usersWithRoles = userRoleRepo.findAllByRoleIdEquals(rolesRepo.getById(0L));
         List<UserStructure> moderators = new ArrayList<>();
         for (UserRole sortedSuggestion : usersWithRoles) {
             moderators.add(sortedSuggestion.getUserEmail());

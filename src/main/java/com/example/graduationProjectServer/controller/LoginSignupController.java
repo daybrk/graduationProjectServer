@@ -36,7 +36,7 @@ public class LoginSignupController {
         }
     }
 // endpoint login передаем емаил пароль
-    @GetMapping("/login/{email}/{password}/{token}")
+    @PostMapping("/login/{email}/{password}/{token}")
     // pathvariable позволяет передать значения из урл выше 
     public AuthResponse authorizationUser(@PathVariable(value = "email") String email,
                                           @PathVariable(value = "password") String password,
@@ -70,5 +70,15 @@ public class LoginSignupController {
         }
     }
 
-
+    @PostMapping("/logout/{email}")
+    public ResponseEntity logout(@PathVariable(value = "email") String email) {
+        try {
+            UserStructure userFromDb = userRepo.findByEmail(email);
+            userFromDb.setToken("");
+            userRepo.save(userFromDb);
+            return ResponseEntity.ok("Выход прошёл успешно");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
 }
