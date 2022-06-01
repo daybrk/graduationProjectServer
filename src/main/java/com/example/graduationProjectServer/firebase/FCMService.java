@@ -1,13 +1,11 @@
 package com.example.graduationProjectServer.firebase;
 
 import com.example.graduationProjectServer.enity.PushNotificationRequest;
-import com.google.firebase.messaging.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service

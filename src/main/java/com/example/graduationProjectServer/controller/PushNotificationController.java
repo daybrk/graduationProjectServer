@@ -37,6 +37,7 @@ public class PushNotificationController {
     }
 
     int count = 0;
+
     @Scheduled(fixedDelay = 60000)
     public void sendSampleNotification() {
         // Вылетает ошибка из-за несоответсвия передаваемому id с id в таблице
@@ -46,15 +47,19 @@ public class PushNotificationController {
             moderators.add(sortedSuggestion.getUserEmail());
         }
         System.out.println(suggestionRepo.countBySuggestionInspectorAndSuggestionStatusEquals(moderators.get(count), statusRepo.getById(0L)));
-        pushNotificationService.sendSamplePushNotification(
-                 new PushNotificationRequest(
-                         "У вас скопились непроверенные предложения " + moderators.get(count).getName() + "!",
-                         "Новых предложений: " + suggestionRepo.countBySuggestionInspectorAndSuggestionStatusEquals(moderators.get(count), statusRepo.getById(0L)),
-                         moderators.get(count).getToken()));
-        if (count >= moderators.size() - 1) {
-            count = 0;
-        } else {
-            count++;
+        try {
+            pushNotificationService.sendSamplePushNotification(
+                    new PushNotificationRequest(
+                            "У вас скопились непроверенные предложения " + moderators.get(count).getName() + "!",
+                            "Новых предложений: " + suggestionRepo.countBySuggestionInspectorAndSuggestionStatusEquals(moderators.get(count), statusRepo.getById(0L)),
+                            moderators.get(count).getToken()));
+            if (count >= moderators.size() - 1) {
+                count = 0;
+            } else {
+                count++;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 }
