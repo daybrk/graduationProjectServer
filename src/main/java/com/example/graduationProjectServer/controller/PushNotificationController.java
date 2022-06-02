@@ -1,12 +1,10 @@
 package com.example.graduationProjectServer.controller;
 
 
-import com.example.graduationProjectServer.enity.PushNotificationRequest;
-import com.example.graduationProjectServer.enity.PushNotificationResponse;
-import com.example.graduationProjectServer.enity.UserRole;
-import com.example.graduationProjectServer.enity.UserStructure;
+import com.example.graduationProjectServer.enity.*;
 import com.example.graduationProjectServer.repository.*;
 import com.example.graduationProjectServer.service.PushNotificationService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +58,22 @@ public class PushNotificationController {
             }
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    public void sendNotificationToUser(SuggestionStructure suggestion) {
+
+        String name = suggestion.getSuggestionAuthor().getName();
+        String status = suggestion.getSuggestionStatus().getStatus();
+        String token = suggestion.getSuggestionAuthor().getToken();
+        try {
+            pushNotificationService.sendSamplePushNotification(
+                    new PushNotificationRequest(
+                            name + ", ваше предложение было проверено !",
+                            "Предложение получило статус: " + status,
+                            token));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }

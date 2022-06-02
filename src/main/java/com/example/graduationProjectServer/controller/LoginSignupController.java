@@ -21,31 +21,31 @@ public class LoginSignupController {
     private RolesRepo rolesRepo;
 
     @PostMapping("/registration")
-    public ResponseEntity createNewUser(@RequestBody UserStructure user) {
+    public AuthRegResponse createNewUser(@RequestBody UserStructure user) {
         try {
             UserStructure userFromDb = userRepo.findByEmail(user.getEmail());
             if (userFromDb != null) {
-                return ResponseEntity.badRequest().body("Пользователь с такими email уже сущетсвует");
+                return new AuthRegResponse(null, "Пользователь с такими email уже сущетсвует");
             } else {
                 userRepo.save(user);
                 userRoleRepo.save(new UserRole(user, rolesRepo.getById(0L)));
-                return ResponseEntity.ok("Регистрация прошла успешно");
+                return new AuthRegResponse(null, "");
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return new AuthRegResponse(null, e.getMessage());
         }
     }
 // endpoint login передаем емаил пароль
     @PostMapping("/login/{email}/{password}/{token}")
     // pathvariable позволяет передать значения из урл выше 
-    public AuthResponse authorizationUser(@PathVariable(value = "email") String email,
-                                          @PathVariable(value = "password") String password,
-                                          @PathVariable(value = "token") String token) {
+    public AuthRegResponse authorizationUser(@PathVariable(value = "email") String email,
+                                             @PathVariable(value = "password") String password,
+                                             @PathVariable(value = "token") String token) {
         try {
             if (email.equals("")) {
-                return new AuthResponse(null, "Пустое поле с email");
+                return new AuthRegResponse(null, "Пустое поле с email");
             } else if (password.equals("")) {
-                return new AuthResponse(null, "Пустое поле с паролем");
+                return new AuthRegResponse(null, "Пустое поле с паролем");
             } else {
                 // gettinguser изначально пустой, потом мы кладем внего все данные пользователя
                 UserStructure gettingUser = userRepo.findByEmail(email);
@@ -56,17 +56,17 @@ public class LoginSignupController {
                                 .orElseThrow(() -> new NoSuchElementException("Предложение не найдено"));
                         gettingUser.setToken(token);
                         userRepo.save(gettingUser);
-                        return new AuthResponse(role.getRole(), "");
+                        return new AuthRegResponse(role.getRole(), "");
                     } else {
-                        return new AuthResponse(null, "Введён неверный пароль");
+                        return new AuthRegResponse(null, "Введён неверный пароль");
                     }
                     // если gettinguser = null то выводит это
                 } else {
-                    return new AuthResponse(null, "Пользователя с таким email не существует");
+                    return new AuthRegResponse(null, "Пользователя с таким email не существует");
                 }
             }
         } catch (Exception e) {
-            return new AuthResponse(null, e.getMessage());
+            return new AuthRegResponse(null, e.getMessage());
         }
     }
 

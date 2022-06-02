@@ -1,16 +1,16 @@
 package com.example.graduationProjectServer.enity;
 
-public class AuthResponse {
+public class AuthRegResponse {
 
     private String role;
     private String errorMessage;
 
-    public AuthResponse(String role, String errorMessage) {
+    public AuthRegResponse(String role, String errorMessage) {
         this.role = role;
         this.errorMessage = errorMessage;
     }
 
-    public AuthResponse(String role) {
+    public AuthRegResponse(String role) {
         this.role = role;
     }
 

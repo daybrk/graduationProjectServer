@@ -1,11 +1,7 @@
 package com.example.graduationProjectServer.controller;
 
-import com.example.graduationProjectServer.enity.Status;
-import com.example.graduationProjectServer.enity.SuggestionStructure;
-import com.example.graduationProjectServer.enity.UserRole;
-import com.example.graduationProjectServer.enity.UserStructure;
+import com.example.graduationProjectServer.enity.*;
 import com.example.graduationProjectServer.repository.*;
-import com.example.graduationProjectServer.service.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +24,13 @@ public class SuggestionController {
     @Autowired
     private RolesRepo rolesRepo;
 
+    private final PushNotificationController pushNotificationController;
+
     private int count = 0;
+
+    public SuggestionController(PushNotificationController pushNotificationController) {
+        this.pushNotificationController = pushNotificationController;
+    }
 
     @PostMapping("/suggestion/create")
     public ResponseEntity createSuggestion(@RequestBody SuggestionStructure suggestion) {
@@ -77,6 +79,7 @@ public class SuggestionController {
             suggestion.setSuggestionStatus(statusRepo.getById(1L));
             suggestion.setSuggestionInspector(userRepo.findByEmail(suggestionInspector));
             suggestionRepo.save(suggestion);
+            pushNotificationController.sendNotificationToUser(suggestion);
             return ResponseEntity.ok("Предложение принято");
         } else {
             return ResponseEntity.badRequest().body("Предложение не найдено");
