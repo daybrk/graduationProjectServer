@@ -63,6 +63,7 @@ public class SuggestionController {
             suggestion.setSuggestionStatus(statusRepo.getById(2L));
             suggestion.setSuggestionInspector(userRepo.findByEmail(suggestionInspector));
             suggestionRepo.save(suggestion);
+            pushNotificationController.sendNotificationToUser(suggestion);
             return ResponseEntity.ok("Предложение отклонено");
         } else {
             return ResponseEntity.badRequest().body("Предложение не найдено");
